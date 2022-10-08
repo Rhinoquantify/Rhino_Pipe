@@ -4,24 +4,24 @@ from typing import Any, NoReturn
 import aredis
 from RhinoLogger.RhinoLogger.RhinoLogger import RhinoLogger
 import traceback
-from RhinoCollect.CollectObject.RhinoCollectObject import RhinoCollectConfig
+from RhinoObject.Rhino.RhinoObject import RhinoConfig
 
 
-class RhinoRedis:
+class RhinoSetGetRedis:
     _redis = None
 
-    def __init__(self, logger: RhinoLogger, rhino_config: RhinoCollectConfig) -> NoReturn:
+    def __init__(self, logger: RhinoLogger, rhino_config: RhinoConfig) -> NoReturn:
         self.logger = logger
         self.rhino_redis = None
         self.init(rhino_config)
 
     @classmethod
-    def get_instance(cls, logger: RhinoLogger, rhino_config: RhinoCollectConfig):
+    def get_instance(cls, logger: RhinoLogger, rhino_config: RhinoConfig):
         if cls._redis is None:
-            cls._redis = RhinoRedis(logger, rhino_config)
+            cls._redis = RhinoSetGetRedis(logger, rhino_config)
         return cls._redis
 
-    def init(self, rhino_config: RhinoCollectConfig) -> NoReturn:
+    def init(self, rhino_config: RhinoConfig) -> NoReturn:
         try:
             self.rhino_redis = aredis.StrictRedis(
                 host=rhino_config.redis_config.host,
