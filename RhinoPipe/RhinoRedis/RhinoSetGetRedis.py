@@ -1,9 +1,10 @@
 import pickle
-from typing import Any, NoReturn
+import traceback
+from typing import Any, NoReturn, List
 
 import aredis
 from RhinoLogger.RhinoLogger.RhinoLogger import RhinoLogger
-import traceback
+from RhinoObject.Rhino.RhinoEnum import RhinoDataType
 from RhinoObject.Rhino.RhinoObject import RhinoConfig
 
 
@@ -50,4 +51,25 @@ class RhinoSetGetRedis:
             return pickle.loads(value)
         except Exception as e:
             self.logger.error(f"Redis 获取失败 " + key)
+            self.logger.error(traceback.format_exc())
+
+    async def set_channel_data(self, data):
+        try:
+            key = data.key  # redis 的 key 值
+            if RhinoDataType.RHINODEPTH.value in key:
+                await self.rhino_redis.publish(RhinoDataType.RHINODEPTH.value, str(data.__dict__))
+            elif RhinoDataType.RHINOTRADE.value in key:
+                await self.rhino_redis.publish(RhinoDataType.RHINOTRADE.value, str(data.__dict__))
+            self.logger.debug("Redis channel 存储 " + data.__str__())
+        except Exception as e:
+            self.logger.error(f"Redis channel 存储失败 " + data.__str__())
+            self.logger.error(traceback.format_exc())
+
+    async def get_channel_data(self, channels: List):
+        try:
+            public_channel = self.rhino_redis.pubsub()
+            await public_channel.subscribe(channels)
+            return public_channel
+        except Exception as e:
+            self.logger.error(f"Redis 订阅失败 " + channels)
             self.logger.error(traceback.format_exc())
