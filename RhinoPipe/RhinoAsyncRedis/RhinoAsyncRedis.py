@@ -40,7 +40,7 @@ class RhinoAsyncRedis:
             key = data.key  # redis 的 key 值
             value = pickle.dumps(data)
             await self.rhino_redis.set(key, value)
-            self.logger.debug("Redis 存储 " + data.__str__())
+            # self.logger.debug("Redis 存储 " + data.__str__())
         except Exception as e:
             self.logger.error(f"Redis 存储失败 " + data.__str__())
             self.logger.error(traceback.format_exc())
@@ -60,7 +60,7 @@ class RhinoAsyncRedis:
                 await self.rhino_redis.publish(RhinoDataType.RHINODEPTH.value, str(data.__dict__))
             elif RhinoDataType.RHINOTRADE.value in key:
                 await self.rhino_redis.publish(RhinoDataType.RHINOTRADE.value, str(data.__dict__))
-            self.logger.debug("Redis channel 存储 " + data.__str__())
+            # self.logger.debug("Redis channel 存储 " + data.__str__())
         except Exception as e:
             self.logger.error(f"Redis channel 存储失败 " + data.__str__())
             self.logger.error(traceback.format_exc())
