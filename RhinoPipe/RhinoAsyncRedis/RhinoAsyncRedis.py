@@ -8,7 +8,7 @@ from RhinoObject.Rhino.RhinoEnum import RhinoDataType
 from RhinoObject.Rhino.RhinoObject import RhinoConfig
 
 
-class RhinoSetGetRedis:
+class RhinoAsyncRedis:
     _redis = None
 
     def __init__(self, logger: RhinoLogger, rhino_config: RhinoConfig) -> NoReturn:
@@ -19,7 +19,7 @@ class RhinoSetGetRedis:
     @classmethod
     def get_instance(cls, logger: RhinoLogger, rhino_config: RhinoConfig):
         if cls._redis is None:
-            cls._redis = RhinoSetGetRedis(logger, rhino_config)
+            cls._redis = RhinoAsyncRedis(logger, rhino_config)
         return cls._redis
 
     def init(self, rhino_config: RhinoConfig) -> NoReturn:

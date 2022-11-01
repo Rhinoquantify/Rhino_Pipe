@@ -13,5 +13,6 @@ setup(
     packages=[
         "RhinoPipe",
         "RhinoPipe.RhinoRedis",
+        "RhinoPipe.RhinoAsyncRedis",
     ]
 )
