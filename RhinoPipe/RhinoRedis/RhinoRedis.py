@@ -35,6 +35,21 @@ class RhinoRedis:
             self.logger.error(f"Redis 初始化失败")
             self.logger.error(traceback.format_exc())
 
+    def set_data(self, data: Any) -> NoReturn:
+        try:
+            key = data.key
+            value = pickle.dumps(data)
+            self.rhino_redis.set(key, value)
+        except Exception as e:
+            self.logger.error(traceback.format_exc())
+
+    def get_data(self, key: str) -> Any:
+        try:
+            value = self.rhino_redis.get(key)
+            return pickle.loads(value)
+        except Exception as e:
+            self.logger.error(traceback.format_exc())
+
     def get_channel_data(self, channels: List):
         try:
             public_channel = self.rhino_redis.pubsub()
