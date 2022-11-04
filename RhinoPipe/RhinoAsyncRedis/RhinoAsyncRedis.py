@@ -60,6 +60,10 @@ class RhinoAsyncRedis:
                 await self.rhino_redis.publish(RhinoDataType.RHINODEPTH.value, str(data.__dict__))
             elif RhinoDataType.RHINOTRADE.value in key:
                 await self.rhino_redis.publish(RhinoDataType.RHINOTRADE.value, str(data.__dict__))
+            elif RhinoDataType.WEBSOCKETSTART.value == key:
+                await self.rhino_redis.publish(RhinoDataType.WEBSOCKETSTART.value, str(data.__dict__))
+            elif RhinoDataType.WEBSOCKETBREAK.value == key:
+                await self.rhino_redis.publish(RhinoDataType.WEBSOCKETBREAK.value, str(data.__dict__))
             # self.logger.debug("Redis channel 存储 " + data.__str__())
         except Exception as e:
             self.logger.error(f"Redis channel 存储失败 " + data.__str__())

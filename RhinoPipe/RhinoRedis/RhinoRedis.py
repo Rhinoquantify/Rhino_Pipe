@@ -4,7 +4,7 @@ from typing import Any, NoReturn, List
 
 import redis
 from RhinoLogger.RhinoLogger.RhinoLogger import RhinoLogger
-from RhinoObject.Rhino.RhinoEnum import RhinoDataType
+from RhinoObject.Rhino.RhinoEnum import RhinoDataType, RhinoSign
 from RhinoObject.Rhino.RhinoObject import RhinoConfig
 
 
@@ -48,6 +48,16 @@ class RhinoRedis:
             value = self.rhino_redis.get(key)
             return pickle.loads(value)
         except Exception as e:
+            self.logger.error(traceback.format_exc())
+
+    def set_channel_data(self, data):
+        try:
+            key = data.key  # redis 的 key 值
+            if RhinoSign.QD.value in key:
+                self.rhino_redis.publish(RhinoDataType.QD.value, str(data.__dict__))
+            # self.logger.debug("Redis channel 存储 " + data.__str__())
+        except Exception as e:
+            self.logger.error(f"Redis channel 存储失败 " + data.__str__())
             self.logger.error(traceback.format_exc())
 
     def get_channel_data(self, channels: List):
