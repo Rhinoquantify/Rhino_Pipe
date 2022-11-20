@@ -42,3 +42,22 @@ class RhinoPipe:
                     else:
                         instance = RhinoRedis.get_instance(logger, rhino_collect_config).get_channel_data
         return instance
+
+    @classmethod
+    # 上面的使用的是单例模式，但是，有的时候，我们不需要单例模式
+    def get_new_instance(cls, logger: RhinoLogger, rhino_collect_config: RhinoConfig):
+        if rhino_collect_config is None:
+            return None
+        instance = None
+        if rhino_collect_config.collect_type == DealDataType.REDIS.value:
+            if rhino_collect_config.redis_config.is_async:
+                if rhino_collect_config.redis_config.DataType == RedisDataType.SET.value:
+                    pass
+                else:
+                    if not rhino_collect_config.redis_config.is_subscribe:
+                        pass
+                    else:
+                        instance = RhinoAsyncRedis.get_new_instance(logger, rhino_collect_config).get_channel_data
+            else:
+                pass
+        return instance

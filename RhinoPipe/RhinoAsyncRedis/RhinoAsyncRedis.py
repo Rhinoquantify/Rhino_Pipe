@@ -1,4 +1,5 @@
 import pickle
+import time
 import traceback
 from typing import Any, NoReturn, List
 
@@ -15,6 +16,10 @@ class RhinoAsyncRedis:
         self.logger = logger
         self.rhino_redis = None
         self.init(rhino_config)
+
+    @classmethod
+    def get_new_instance(cls, logger: RhinoLogger, rhino_config: RhinoConfig):
+        return RhinoAsyncRedis(logger, rhino_config)
 
     @classmethod
     def get_instance(cls, logger: RhinoLogger, rhino_config: RhinoConfig):
@@ -38,6 +43,7 @@ class RhinoAsyncRedis:
     async def set_data(self, data: Any) -> NoReturn:
         try:
             key = data.key  # redis 的 key 值
+            data.store_time = int(time.time() * 1000)
             value = pickle.dumps(data)
             await self.rhino_redis.set(key, value)
             # self.logger.debug("Redis 存储 " + data.__str__())
@@ -56,6 +62,7 @@ class RhinoAsyncRedis:
     async def set_channel_data(self, data):
         try:
             key = data.key  # redis 的 key 值
+            data.store_time = int(time.time() * 1000)
             if RhinoDataType.RHINODEPTH.value in key:
                 await self.rhino_redis.publish(RhinoDataType.RHINODEPTH.value, str(data.__dict__))
             elif RhinoDataType.RHINOTRADE.value in key:
@@ -64,7 +71,7 @@ class RhinoAsyncRedis:
                 await self.rhino_redis.publish(RhinoDataType.WEBSOCKETSTART.value, str(data.__dict__))
             elif RhinoDataType.WEBSOCKETBREAK.value == key:
                 await self.rhino_redis.publish(RhinoDataType.WEBSOCKETBREAK.value, str(data.__dict__))
-            # self.logger.debug("Redis channel 存储 " + data.__str__())
+            self.logger.debug("Redis channel 存储 " + data.__str__())
         except Exception as e:
             self.logger.error(f"Redis channel 存储失败 " + data.__str__())
             self.logger.error(traceback.format_exc())

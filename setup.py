@@ -4,7 +4,7 @@ from distutils.core import setup
 
 setup(
     name="RhinoPipe",
-    version="0.0.1",
+    version="0.0.3",
     description="The Rhino quantify of collect pipe",
     url="",
     author="XiNiu",
