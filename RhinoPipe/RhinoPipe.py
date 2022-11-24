@@ -52,7 +52,7 @@ class RhinoPipe:
         if rhino_collect_config.collect_type == DealDataType.REDIS.value:
             if rhino_collect_config.redis_config.is_async:
                 if rhino_collect_config.redis_config.DataType == RedisDataType.SET.value:
-                    pass
+                    instance = RhinoAsyncRedis.get_new_instance(logger, rhino_collect_config).set_data
                 else:
                     if not rhino_collect_config.redis_config.is_subscribe:
                         pass
