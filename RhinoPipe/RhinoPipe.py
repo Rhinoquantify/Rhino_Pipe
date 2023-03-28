@@ -58,7 +58,7 @@ class RhinoPipe:
                         instance = RhinoAsyncRedis.get_instance(logger, rhino_collect_config).set_channel_data
                 else:
                     if not rhino_collect_config.redis_config.is_subscribe:
-                        pass
+                        instance = RhinoAsyncRedis.get_new_instance(logger, rhino_collect_config).get_data
                     else:
                         instance = RhinoAsyncRedis.get_new_instance(logger, rhino_collect_config).get_channel_data
             else:
