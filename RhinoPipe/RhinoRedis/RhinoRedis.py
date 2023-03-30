@@ -38,7 +38,7 @@ class RhinoRedis:
 
     def set_data(self, data: Any) -> NoReturn:
         try:
-            data.store_time = int(time.time() * 1000)
+            data.pipe_start_time = int(time.time() * 1000)
             key = data.key
             value = pickle.dumps(data)
             self.rhino_redis.set(key, value)
@@ -54,7 +54,7 @@ class RhinoRedis:
 
     def set_channel_data(self, data):
         try:
-            data.store_time = int(time.time() * 1000)
+            data.pipe_start_time = int(time.time() * 1000)
             key = data.key  # redis 的 key 值
             if RhinoSign.QD.value in key:
                 self.rhino_redis.publish(RhinoDataType.QD.value, str(data.__dict__))
